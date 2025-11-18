@@ -1,0 +1,26 @@
+{
+  "1Y": {
+    "correlation": 0.5626991769445019,
+    "maturity": 1.0
+  },
+  "2Y": {
+    "correlation": 0.5688202564087141,
+    "maturity": 2.0
+  },
+  "3Y": {
+    "correlation": 0.5776228567159976,
+    "maturity": 3.0
+  },
+  "5Y": {
+    "correlation": 0.6213839583622177,
+    "maturity": 5.0
+  },
+  "7Y": {
+    "correlation": 0.6315427366558761,
+    "maturity": 7.0
+  },
+  "10Y": {
+    "correlation": 0.6493049346228682,
+    "maturity": 10.0
+  }
+}
