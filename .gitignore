@@ -1,0 +1,14 @@
+# System files
+.DS_Store
+~$*
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# Results (optional - uncomment if you don't want to upload results)
+# results.json
+# pricing_comparison.csv

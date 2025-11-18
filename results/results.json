@@ -1,0 +1,27 @@
+{
+  "calibrated_correlation": 0.336652221361905,
+  "ape": 431.03454477865944,
+  "mae": 86.20690895573189,
+  "model_prices": {
+    "equity_0_3": {
+      "spread": 1145.2148535677854,
+      "upfront": 28.294059809470863
+    },
+    "mezz_3_7": {
+      "spread": 405.1987961991303,
+      "upfront": null
+    },
+    "mezz_7_10": {
+      "spread": 184.320866944775,
+      "upfront": null
+    },
+    "senior_10_15": {
+      "spread": 87.34390048397607,
+      "upfront": null
+    },
+    "senior_15_100": {
+      "spread": 3.4363590397511246,
+      "upfront": null
+    }
+  }
+}
