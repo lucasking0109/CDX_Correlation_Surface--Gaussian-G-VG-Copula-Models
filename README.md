@@ -31,15 +31,13 @@ All data files are located in `data/` directory.
 │   ├── CDX_DATA (1).xlsx                 # Original Bloomberg data
 │   ├── cdx_constituents_multi_tenor.csv  # Multi-tenor CDS spreads (125 companies)
 │   ├── cdx_market_data_multi_tenor.json  # Multi-tenor tranche prices
-│   ├── ois_curve.csv                     # OIS discount curve
-│   └── [legacy 5Y data files]            # Original 5Y-only data
+│   └── ois_curve.csv                     # OIS discount curve
 ├── results/
-│   ├── gaussian_multi_tenor_pricing.csv  # Pricing results for all tenors
-│   ├── correlation_term_structure.csv    # Correlation by tenor
-│   ├── multi_tenor_summary.csv           # Error metrics by tenor
-│   ├── calibrated_correlations_multi_tenor.json  # Calibrated parameters
-│   ├── *.png                             # Visualization plots
-│   └── [legacy 5Y results]               # Original 5Y-only results
+│   ├── gaussian_multi_tenor_pricing.csv
+│   ├── correlation_term_structure.csv
+│   ├── multi_tenor_summary.csv
+│   ├── calibrated_correlations_multi_tenor.json
+│   └── *.png                             # Visualizations
 ├── run_multi_tenor_analysis.py           # Main analysis script
 ├── create_visualizations.py              # Visualization generation
 └── README.md

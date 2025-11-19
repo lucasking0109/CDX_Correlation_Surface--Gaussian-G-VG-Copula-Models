@@ -1,17 +1,11 @@
 #!/usr/bin/env python
-"""
-Create visualizations for multi-tenor analysis
-"""
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import json
 
 print("Creating visualizations...")
-
-# Load results
 gaussian_pricing = pd.read_csv('results/gaussian_multi_tenor_pricing.csv')
 corr_term_struct = pd.read_csv('results/correlation_term_structure.csv')
 summary = pd.read_csv('results/multi_tenor_summary.csv')
@@ -20,9 +14,6 @@ summary = pd.read_csv('results/multi_tenor_summary.csv')
 plt.style.use('seaborn-v0_8-whitegrid')
 sns.set_palette("husl")
 
-# ============================================================================
-# FIGURE 1: Correlation Term Structure
-# ============================================================================
 
 fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -50,9 +41,6 @@ plt.savefig('results/correlation_term_structure.png', dpi=300, bbox_inches='tigh
 print("✓ Saved correlation_term_structure.png")
 plt.close()
 
-# ============================================================================
-# FIGURE 2: Pricing Errors by Tenor
-# ============================================================================
 
 fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -89,9 +77,6 @@ plt.savefig('results/pricing_errors_by_tenor.png', dpi=300, bbox_inches='tight')
 print("✓ Saved pricing_errors_by_tenor.png")
 plt.close()
 
-# ============================================================================
-# FIGURE 3: Tranche Pricing Errors Heatmap
-# ============================================================================
 
 # Pivot data for heatmap
 heatmap_data = gaussian_pricing.pivot(index='Tranche', columns='Tenor', values='Error_bps')
@@ -116,9 +101,6 @@ plt.savefig('results/pricing_errors_heatmap.png', dpi=300, bbox_inches='tight')
 print("✓ Saved pricing_errors_heatmap.png")
 plt.close()
 
-# ============================================================================
-# FIGURE 4: Expected Loss by Tranche and Tenor
-# ============================================================================
 
 fig, ax = plt.subplots(figsize=(14, 7))
 
@@ -142,9 +124,6 @@ plt.savefig('results/expected_loss_by_tranche.png', dpi=300, bbox_inches='tight'
 print("✓ Saved expected_loss_by_tranche.png")
 plt.close()
 
-# ============================================================================
-# FIGURE 5: Model vs Market Spreads (5Y as example)
-# ============================================================================
 
 tenor_5y = gaussian_pricing[gaussian_pricing['Tenor'] == '5Y']
 

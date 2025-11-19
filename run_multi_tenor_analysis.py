@@ -1,27 +1,18 @@
 #!/usr/bin/env python
-"""
-Multi-Tenor CDX Tranche Pricing Analysis
-Implements Gaussian and G-VG copula models across 6 tenors (1Y-10Y)
-"""
 
 import pandas as pd
 import numpy as np
 import json
 from scipy.stats import norm
-from scipy.optimize import minimize_scalar, minimize
+from scipy.optimize import minimize_scalar
 from scipy.interpolate import interp1d
 import warnings
 warnings.filterwarnings('ignore')
 
-print("="*70)
-print(" MULTI-TENOR CDX TRANCHE PRICING ANALYSIS")
-print("="*70)
+print("Multi-Tenor CDX Tranche Pricing Analysis")
+print("-" * 50)
 
-# ============================================================================
-# 1. LOAD DATA
-# ============================================================================
-
-print("\n[1/6] Loading data...")
+print("\nLoading data...")
 
 constituents = pd.read_csv('data/cdx_constituents_multi_tenor.csv')
 with open('data/cdx_market_data_multi_tenor.json', 'r') as f:
@@ -29,17 +20,9 @@ with open('data/cdx_market_data_multi_tenor.json', 'r') as f:
 ois_curve = pd.read_csv('data/ois_curve.csv')
 
 tenors = ['1Y', '2Y', '3Y', '5Y', '7Y', '10Y']
-print(f"✓ Loaded {len(constituents)} constituents")
-print(f"✓ Loaded market data for {len(tenors)} tenors")
-
-# ============================================================================
-# 2. CORE FUNCTIONS
-# ============================================================================
-
-print("\n[2/6] Initializing pricing functions...")
+print(f"Loaded {len(constituents)} constituents, {len(tenors)} tenors\n")
 
 def get_discount_factor(t, ois_curve_df):
-    """Get discount factor at time t"""
     def tenor_to_years(tenor):
         if 'W' in tenor:
             return int(tenor.replace('W', '')) / 52
@@ -58,12 +41,10 @@ def get_discount_factor(t, ois_curve_df):
     return np.exp(-rate * t)
 
 def bootstrap_survival_probability(spread, recovery, maturity, dt=0.25):
-    """Simple bootstrap of survival probability"""
     hazard_rate = spread / 10000 / (1 - recovery)
     return lambda t: np.exp(-hazard_rate * t)
 
 def gaussian_copula_loss_distribution(survival_probs, recoveries, correlation, maturity, M=500):
-    """Calculate loss distribution using Gaussian copula (LHP)"""
     N = len(survival_probs)
     lgd = np.array([1 - r for r in recoveries]) / N
 
@@ -91,7 +72,6 @@ def gaussian_copula_loss_distribution(survival_probs, recoveries, correlation, m
     return loss_grid, loss_prob
 
 def price_tranche(loss_grid, loss_prob, attachment, detachment, maturity, ois_curve_df, dt=0.25):
-    """Price a tranche given loss distribution"""
     tranche_size = detachment - attachment
     times = np.arange(dt, maturity + dt, dt)
 
@@ -110,14 +90,7 @@ def price_tranche(loss_grid, loss_prob, attachment, detachment, maturity, ois_cu
 
     return fair_spread, expected_loss
 
-print("✓ Functions initialized")
-
-# ============================================================================
-# 3. GAUSSIAN COPULA - CALIBRATE FOR ALL TENORS
-# ============================================================================
-
-print("\n[3/6] Calibrating Gaussian Copula for all tenors...")
-print("-" * 70)
+print("Calibrating Gaussian Copula...")
 
 gaussian_results = {}
 
@@ -181,11 +154,7 @@ for tenor in tenors:
         'maturity': maturity
     }
 
-# ============================================================================
-# 4. PRICE ALL TRANCHES WITH GAUSSIAN COPULA
-# ============================================================================
-
-print("\n[4/6] Pricing all tranches with Gaussian Copula...")
+print("\nPricing tranches...")
 
 gaussian_pricing = []
 
@@ -228,21 +197,12 @@ for tenor in tenors:
 gaussian_df = pd.DataFrame(gaussian_pricing)
 gaussian_df.to_csv('results/gaussian_multi_tenor_pricing.csv', index=False)
 
-print(f"✓ Priced {len(gaussian_df)} tranche-tenor combinations")
-
-# Calculate aggregate errors
 for tenor in tenors:
     tenor_data = gaussian_df[gaussian_df['Tenor'] == tenor]
     mae = tenor_data['Error_bps'].mean()
-    print(f"  {tenor}: MAE = {mae:.2f} bps")
+    print(f"{tenor}: MAE = {mae:.2f} bps")
 
-# ============================================================================
-# 5. BUILD CORRELATION SURFACE
-# ============================================================================
-
-print("\n[5/6] Building correlation surface...")
-
-# Create correlation term structure
+print("\nBuilding correlation surface...")
 corr_term_structure = pd.DataFrame({
     'Tenor': tenors,
     'Maturity_Years': [float(t.replace('Y','')) for t in tenors],
@@ -252,14 +212,7 @@ corr_term_structure = pd.DataFrame({
 
 corr_term_structure.to_csv('results/correlation_term_structure.csv', index=False)
 
-print("✓ Correlation Term Structure:")
-print(corr_term_structure.to_string(index=False))
-
-# ============================================================================
-# 6. SUMMARY STATISTICS
-# ============================================================================
-
-print("\n[6/6] Generating summary statistics...")
+print("\nSummary statistics:")
 
 summary_stats = []
 for tenor in tenors:
@@ -275,13 +228,7 @@ for tenor in tenors:
 
 summary_df = pd.DataFrame(summary_stats)
 summary_df.to_csv('results/multi_tenor_summary.csv', index=False)
-
-print("\n" + "="*70)
-print(" SUMMARY - GAUSSIAN COPULA MULTI-TENOR ANALYSIS")
-print("="*70)
 print(summary_df.to_string(index=False))
-
-# Save calibrated correlations
 corr_results = {
     tenor: {
         'correlation': gaussian_results[tenor]['correlation'],
@@ -293,7 +240,4 @@ corr_results = {
 with open('results/calibrated_correlations_multi_tenor.json', 'w') as f:
     json.dump(corr_results, f, indent=2)
 
-print("\n✓ All results saved to results/ directory")
-print("="*70)
-print(" ANALYSIS COMPLETE")
-print("="*70)
+print("\nAnalysis complete. Results saved to results/ directory.")
