@@ -1,0 +1,17 @@
+{
+  "market_tranche_prices": {
+    "equity_0_3_upfront": 28.3014,
+    "mezz_3_7": 95.08,
+    "mezz_7_10": 113.1,
+    "senior_10_15": 55.94,
+    "senior_15_100": 21.72
+  },
+  "base_correlations": {
+    "detach_3": 47.67,
+    "detach_7": 47.67,
+    "detach_10": 55.99,
+    "detach_15": 60.33,
+    "detach_100": 67.56
+  },
+  "index_level": 51.97
+}
